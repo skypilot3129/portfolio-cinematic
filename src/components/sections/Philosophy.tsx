@@ -4,11 +4,19 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ShinyText from "@/components/ui/ShinyText";
 import { IconChevronDown } from "@/components/ui/Icons";
-import { useLanguage } from "@/context/LanguageContext"; // Impor hook bahasa
+import { useLanguage } from "@/context/LanguageContext";
+
+// PERBAIKAN: Definisikan tipe yang jelas untuk setiap langkah filosofi
+type PhilosophyStep = {
+    number: string;
+    title: string;
+    description: string;
+};
 
 export const Philosophy = () => {
-    const { t } = useLanguage(); // Gunakan hook untuk mendapatkan fungsi terjemahan
-    const philosophySteps = t('philosophySteps'); // Ambil data dari file terjemahan
+    const { t } = useLanguage();
+    // PERBAIKAN: Terapkan tipe pada data yang diambil dari terjemahan
+    const philosophySteps = t('philosophySteps') as PhilosophyStep[];
 
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -26,9 +34,11 @@ export const Philosophy = () => {
                 <div className="relative z-10 text-center mb-16">
                     <h2 className="flex items-center justify-center text-3xl font-semibold font-syne text-slate-lightest">
                         <span className="text-accent font-mono text-xl md:text-2xl mr-3">02.</span>
-                        <ShinyText text={t('philosophyTitle')} speed={5} />
+                        {/* PERBAIKAN: Menambahkan 'as string' */}
+                        <ShinyText text={t('philosophyTitle') as string} speed={5} />
                     </h2>
-                    <p className="text-slate mt-4 max-w-2xl mx-auto px-4 md:px-0">{t('philosophyTagline')}</p>
+                    {/* PERBAIKAN: Menambahkan 'as string' */}
+                    <p className="text-slate mt-4 max-w-2xl mx-auto px-4 md:px-0">{t('philosophyTagline') as string}</p>
                 </div>
 
                 <div className="relative z-10 w-full max-w-3xl mx-auto flex flex-col md:flex-row gap-8 px-4 md:px-0">
@@ -41,7 +51,7 @@ export const Philosophy = () => {
                     </div>
 
                     <div className="flex-1">
-                        {philosophySteps.map((step: any, index: number) => (
+                        {philosophySteps.map((step, index) => (
                             <div key={index} className="border-b border-slate/20 last:border-b-0">
                                 <h3 
                                     className="flex justify-between items-center cursor-pointer py-6"

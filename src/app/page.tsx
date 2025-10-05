@@ -16,7 +16,6 @@ import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import Preloader from '@/components/ui/Preloader';
 import { LanguageProvider, useLanguage } from '@/context/LanguageContext';
 
-// Komponen untuk tombol pengganti bahasa
 const LanguageSwitcher = () => {
     const { language, setLanguage } = useLanguage();
     const toggleLanguage = () => {
@@ -34,11 +33,10 @@ const LanguageSwitcher = () => {
     );
 }
 
-// Konten utama halaman
 const HomeContent = () => {
     useSmoothScroll(); 
     
-    const { t } = useLanguage(); // Gunakan hook untuk mendapatkan fungsi terjemahan
+    const { t } = useLanguage();
     const [isMounted, setIsMounted] = useState(false);
     const [isNavOpen, setIsNavOpen] = useState(false);
 
@@ -47,13 +45,13 @@ const HomeContent = () => {
         return () => clearTimeout(timeout);
     }, []);
 
-    // Gunakan fungsi 't' untuk mendapatkan teks navigasi
+    // PERBAIKAN: Menambahkan 'as string' untuk memastikan tipe data yang benar
     const navItems = [
-      { label: t('navAbout'), href: '#about', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
-      { label: t('navPhilosophy'), href: '#philosophy', rotation: 8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
-      { label: t('navProjects'), href: '#projects', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
-      { label: t('navContact'), href: '#contact', rotation: 8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
-      { label: t('navResume'), href: '/resume.pdf', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } }
+      { label: t('navAbout') as string, href: '#about', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navPhilosophy') as string, href: '#philosophy', rotation: 8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navProjects') as string, href: '#projects', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navContact') as string, href: '#contact', rotation: 8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navResume') as string, href: '/resume.pdf', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } }
     ];
 
     return (
@@ -91,7 +89,6 @@ const HomeContent = () => {
     );
 };
 
-// Komponen utama yang membungkus seluruh halaman
 const Home = () => {
     const [isLoading, setIsLoading] = useState(true);
 

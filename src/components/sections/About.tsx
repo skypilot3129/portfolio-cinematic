@@ -4,9 +4,16 @@ import ShinyText from "@/components/ui/ShinyText";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import MatrixSkills from "@/components/ui/MatrixSkills";
-import { useLanguage } from "@/context/LanguageContext"; // Impor hook bahasa
+import { useLanguage } from "@/context/LanguageContext";
 
-const TimelineItem = ({ year, title, description, progress, range }: any) => {
+// PERBAIKAN: Definisikan tipe untuk setiap item dalam timeline
+type TimelineItemData = {
+    year: string;
+    title: string;
+    description: string;
+};
+
+const TimelineItem = ({ year, title, description, progress, range }: { year: string, title: string, description: string, progress: any, range: number[] }) => {
     const opacity = useTransform(progress, range, [0, 1]);
     const y = useTransform(progress, range, [50, 0]);
 
@@ -20,8 +27,9 @@ const TimelineItem = ({ year, title, description, progress, range }: any) => {
 };
 
 export const About = () => {
-    const { t } = useLanguage(); // Gunakan hook untuk mendapatkan fungsi terjemahan
-    const timelineData = t('timeline'); // Ambil data timeline dari terjemahan
+    const { t } = useLanguage();
+    // PERBAIKAN: Terapkan tipe pada data yang diambil dari terjemahan
+    const timelineData = t('timeline') as TimelineItemData[];
 
     const targetRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -55,7 +63,8 @@ export const About = () => {
                     <div className="md:sticky md:top-24 h-fit">
                         <h2 className="flex items-center text-3xl font-semibold font-syne text-slate-lightest mb-6">
                             <span className="text-accent font-mono text-2xl mr-3">01.</span>
-                            <ShinyText text={t('aboutTitle')} speed={5} />
+                            {/* PERBAIKAN: Menambahkan 'as string' */}
+                            <ShinyText text={t('aboutTitle') as string} speed={5} />
                         </h2>
                     </div>
 
@@ -65,7 +74,7 @@ export const About = () => {
                             className="absolute top-0 left-0 w-0.5 h-full bg-accent origin-top"
                         />
                         <div className="pl-8">
-                            {timelineData.map((item: any, index: number) => {
+                            {timelineData.map((item, index) => {
                                 const start = index / timelineData.length;
                                 const end = start + 1 / timelineData.length;
                                 return (
@@ -84,7 +93,8 @@ export const About = () => {
                 </div>
 
                 <div className="mt-24 text-center">
-                    <h3 className="text-slate-lightest font-syne text-2xl mb-8">{t('skillsTitle')}</h3>
+                    {/* PERBAIKAN: Menambahkan 'as string' */}
+                    <h3 className="text-slate-lightest font-syne text-2xl mb-8">{t('skillsTitle') as string}</h3>
                     <div className="relative">
                        <MatrixSkills skills={techSkills} />
                     </div>

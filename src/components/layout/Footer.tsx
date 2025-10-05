@@ -1,10 +1,10 @@
 "use client";
 
 import { IconGitHub, IconInstagram, IconLinkedin, IconTiktok } from '@/components/ui/Icons';
-import { useLanguage } from '@/context/LanguageContext'; // Impor hook bahasa
+import { useLanguage } from '@/context/LanguageContext';
 
 export const Footer = () => {
-    const { t } = useLanguage(); // Gunakan hook untuk mendapatkan fungsi terjemahan
+    const { t } = useLanguage();
 
     const socialItems = [
         { href: "https://github.com", icon: <IconGitHub />, ariaLabel: "GitHub" },
@@ -25,9 +25,9 @@ export const Footer = () => {
                     </li>
                 ))}
             </ul>
-            {/* Menggunakan fungsi 't' untuk teks */}
-            <p className="font-mono text-sm text-slate">{t('footerBuiltBy')}</p>
-            <p className="font-mono text-xs text-slate/50 mt-1">{t('footerInspired')}</p>
+            {/* PERBAIKAN: Menambahkan 'as string' untuk memastikan tipe data yang benar */}
+            <p className="font-mono text-sm text-slate">{t('footerBuiltBy') as string}</p>
+            <p className="font-mono text-xs text-slate/50 mt-1">{t('footerInspired') as string}</p>
         </footer>
     );
 };

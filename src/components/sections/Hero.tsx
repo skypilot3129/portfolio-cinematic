@@ -6,7 +6,6 @@ import ProfileCard from '@/components/ui/ProfileCard';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
 
-// PERBAIKAN: Memberitahu TypeScript tentang objek global VANTA
 declare global {
     interface Window {
         VANTA: any;
@@ -45,7 +44,7 @@ export const Hero = ({ isMounted }: { isMounted: boolean }) => {
         className={`font-mono text-accent transition-all duration-700 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'}`} 
         style={{ transitionDelay: '800ms' }}
     >
-        {t('heroGreeting')}
+        {t('heroGreeting') as string}
     </p>;
     
     const two = (
@@ -54,7 +53,7 @@ export const Hero = ({ isMounted }: { isMounted: boolean }) => {
             style={{ transitionDelay: '900ms' }}
         >
             <TrueFocus 
-                sentence={t('heroName')}
+                sentence={t('heroName') as string}
                 borderColor="#64ffda" 
                 blurAmount={3} 
                 animationDuration={0.8} 
@@ -66,7 +65,7 @@ export const Hero = ({ isMounted }: { isMounted: boolean }) => {
     const three = <p 
         className={`max-w-xl text-slate text-lg mt-6 transition-all duration-700 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'}`} 
         style={{ transitionDelay: '1100ms' }}
-        dangerouslySetInnerHTML={{ __html: t('heroTagline') }}
+        dangerouslySetInnerHTML={{ __html: t('heroTagline') as string }}
     />;
     
     const four = (
@@ -81,7 +80,7 @@ export const Hero = ({ isMounted }: { isMounted: boolean }) => {
             }}
             whileTap={{ scale: 0.95 }}
         >
-            <span className="relative z-10">{t('heroButton')}</span>
+            <span className="relative z-10">{t('heroButton') as string}</span>
             <span className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
         </motion.a>
     );

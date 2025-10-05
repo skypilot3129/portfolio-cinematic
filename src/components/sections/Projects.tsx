@@ -4,11 +4,25 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ShinyText from "@/components/ui/ShinyText";
 import { IconExternalLink, IconYouTube, IconGitHub, IconChevronDown } from "@/components/ui/Icons";
-import { useLanguage } from "@/context/LanguageContext"; // Impor hook bahasa
+import { useLanguage } from "@/context/LanguageContext";
+import Image from "next/image"; // Pastikan Image diimpor
+
+// PERBAIKAN: Definisikan tipe yang jelas untuk data proyek
+type Project = {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    tags: string[];
+    github: string;
+    link: string;
+    videoLink: string;
+};
 
 export const Projects = () => {
-    const { t } = useLanguage(); // Gunakan hook untuk mendapatkan fungsi terjemahan
-    const projectsData = t('projectsData'); // Ambil data proyek dari file terjemahan
+    const { t } = useLanguage();
+    // PERBAIKAN: Terapkan tipe pada data yang diambil
+    const projectsData = t('projectsData') as Project[];
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -32,14 +46,14 @@ export const Projects = () => {
             <div className="text-center mb-16 px-4">
                 <h2 className="flex items-center justify-center text-3xl font-semibold font-syne text-slate-lightest">
                     <span className="text-accent font-mono text-xl md:text-2xl mr-3">03.</span>
-                    <ShinyText text={t('projectsTitle')} speed={5} />
+                    <ShinyText text={t('projectsTitle') as string} speed={5} />
                 </h2>
-                <p className="text-slate mt-4 max-w-2xl mx-auto">{t('projectsTagline')}</p>
+                <p className="text-slate mt-4 max-w-2xl mx-auto">{t('projectsTagline') as string}</p>
             </div>
 
             <div className="relative w-full h-[500px]" style={{ perspective: '1000px' }}>
                 <AnimatePresence initial={false}>
-                    {projectsData.map((project: any, index: number) => {
+                    {projectsData.map((project, index) => {
                         const position = index - activeIndex;
                         const isCenter = position === 0;
                         const isOffScreen = Math.abs(position) > 1;
@@ -47,53 +61,35 @@ export const Projects = () => {
                         const isRight = position > 0 && !isOffScreen;
 
                         let xOffset = position * 40; 
-                        let scale = 1;
-                        let zIndex = 0;
-                        let opacity = 0;
-                        let blur = 0;
+                        let scale = 1, zIndex = 0, opacity = 0, blur = 0;
 
                         if (isCenter) {
-                            scale = 1;
-                            zIndex = 3;
-                            opacity = 1;
-                            blur = 0;
+                            scale = 1; zIndex = 3; opacity = 1; blur = 0;
                         } else if (isLeft) {
-                            scale = 0.8;
-                            zIndex = 2;
-                            opacity = 1;
-                            xOffset -= 10;
-                            blur = 4;
+                            scale = 0.8; zIndex = 2; opacity = 1; xOffset -= 10; blur = 4;
                         } else if (isRight) {
-                            scale = 0.8;
-                            zIndex = 1;
-                            opacity = 1;
-                            xOffset += 10;
-                            blur = 4;
+                            scale = 0.8; zIndex = 1; opacity = 1; xOffset += 10; blur = 4;
                         } else if (isOffScreen) {
-                            opacity = 0;
-                            xOffset = position > 0 ? 100 : -100;
+                            opacity = 0; xOffset = position > 0 ? 100 : -100;
                         }
                         
                         return (
                             <motion.div
                                 key={project.id}
                                 initial={false}
-                                animate={{
-                                    x: `${xOffset}%`,
-                                    scale: scale,
-                                    opacity: opacity,
-                                    zIndex: zIndex,
-                                    filter: `blur(${blur}px)`
-                                }}
+                                animate={{ x: `${xOffset}%`, scale, opacity, zIndex, filter: `blur(${blur}px)` }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                                 className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-[380px] h-auto aspect-[4/3.5] md:w-[550px] md:h-[450px] md:aspect-auto"
                             >
                                 <div className="w-full h-full bg-light-navy/50 backdrop-blur-sm rounded-2xl border border-slate/20 shadow-2xl p-4 md:p-6 flex flex-col group/card">
-                                    <div className="overflow-hidden rounded-lg">
-                                        <img 
+                                    <div className="relative overflow-hidden rounded-lg w-full h-40 md:h-48">
+                                        {/* Memastikan <Image /> digunakan dengan benar */}
+                                        <Image 
                                             src={project.image} 
                                             alt={project.title} 
-                                            className="w-full h-40 md:h-48 object-cover transition-transform duration-300 group-hover/card:scale-105" 
+                                            fill
+                                            sizes="(max-width: 768px) 90vw, 550px"
+                                            className="object-cover transition-transform duration-300 group-hover/card:scale-105" 
                                         />
                                     </div>
                                     <h3 className="text-lg md:text-xl font-bold text-slate-lightest font-syne mt-4">{project.title}</h3>

@@ -5,10 +5,19 @@ import { translations } from '@/lib/translations';
 
 type Language = 'en' | 'id';
 
+// Tipe untuk opsi terjemahan (misalnya, untuk mengambil item dari array)
+type TranslationOptions = {
+  index?: number;
+};
+
+// Mendefinisikan tipe data yang lebih spesifik untuk konten terjemahan
+type TranslationValue = string | string[] | Record<string, unknown>[] | Record<string, unknown>;
+
 interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (key: string, options?: any) => any;
+  // Mengganti 'any' dengan 'unknown' untuk return value yang lebih aman
+  t: (key: string, options?: TranslationOptions) => unknown;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -16,22 +25,27 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('id');
 
-  const t = (key: string, options?: any) => {
+  const t = (key: string, options?: TranslationOptions): unknown => {
     const keys = key.split('.');
-    let result = translations[language] as any;
+    // Mengganti 'any' dengan tipe yang lebih spesifik
+    let result: TranslationValue | undefined = translations[language];
+    
     for (const k of keys) {
-      result = result?.[k];
+      if (typeof result === 'object' && result !== null && !Array.isArray(result)) {
+        result = (result as Record<string, TranslationValue>)[k];
+      } else {
+        result = undefined;
+        break;
+      }
+
       if (result === undefined) {
         console.warn(`Translation key not found: ${key}`);
         return key;
       }
     }
 
-    if (options) {
-        // Simple interpolation (e.g., t('key', { index: 0 }))
-        if (options.index !== undefined && Array.isArray(result)) {
-            return result[options.index];
-        }
+    if (options && options.index !== undefined && Array.isArray(result)) {
+        return result[options.index];
     }
     
     return result;
@@ -51,3 +65,4 @@ export const useLanguage = () => {
   }
   return context;
 };
+

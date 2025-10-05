@@ -5,11 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ShinyText from "@/components/ui/ShinyText";
 import Lanyard from "@/components/ui/Lanyard";
 import { IconGitHub, IconInstagram, IconLinkedin } from "@/components/ui/Icons";
-import { useLanguage } from "@/context/LanguageContext"; // Impor hook bahasa
+import { useLanguage } from "@/context/LanguageContext";
 
-// Komponen Overlay yang akan muncul
 const ContactOverlay = ({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }) => {
-    const { t } = useLanguage(); // Gunakan hook di dalam overlay juga
+    const { t } = useLanguage();
     const [isReadyForCanvas, setIsReadyForCanvas] = useState(false);
 
     useEffect(() => {
@@ -48,9 +47,10 @@ const ContactOverlay = ({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
                     {isReadyForCanvas && <Lanyard position={[0, -2, 10]} />}
                 </div>
                 
-                <h3 className="font-syne text-3xl text-slate-lightest mt-4">{t('overlayTitle')}</h3>
-                <a href="mailto:skypilot048@gmail.com" className="font-mono text-accent mt-2 hover:underline">
-                    skypilot048@contoh.com
+                {/* PERBAIKAN: Menambahkan 'as string' */}
+                <h3 className="font-syne text-3xl text-slate-lightest mt-4">{t('overlayTitle') as string}</h3>
+                <a href="mailto:emailanda@contoh.com" className="font-mono text-accent mt-2 hover:underline">
+                    emailanda@contoh.com
                 </a>
 
                 <div className="flex items-center gap-6 text-slate mt-8">
@@ -65,7 +65,7 @@ const ContactOverlay = ({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
 
 
 export const Contact = () => {
-    const { t } = useLanguage(); // Gunakan hook
+    const { t } = useLanguage();
     const [isOverlayOpen, setOverlayOpen] = useState(false);
 
     return (
@@ -76,9 +76,11 @@ export const Contact = () => {
             >
                 <h2 className="flex items-center justify-center text-3xl font-semibold font-syne text-slate-lightest mb-4">
                     <span className="text-accent font-mono text-2xl mr-3">04.</span>
-                    <ShinyText text={t('contactTitle')} speed={5} />
+                    {/* PERBAIKAN: Menambahkan 'as string' */}
+                    <ShinyText text={t('contactTitle') as string} speed={5} />
                 </h2>
-                <p className="text-slate max-w-xl mx-auto mb-8">{t('contactTagline')}</p>
+                {/* PERBAIKAN: Menambahkan 'as string' */}
+                <p className="text-slate max-w-xl mx-auto mb-8">{t('contactTagline') as string}</p>
                 
                 <motion.button 
                     onClick={() => setOverlayOpen(true)}
@@ -90,7 +92,8 @@ export const Contact = () => {
                     }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <span className="relative z-10">{t('contactButton')}</span>
+                    {/* PERBAIKAN: Menambahkan 'as string' */}
+                    <span className="relative z-10">{t('contactButton') as string}</span>
                     <span className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 </motion.button>
             </section>

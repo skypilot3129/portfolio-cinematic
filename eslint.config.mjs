@@ -10,7 +10,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals"), // Note: "next/typescript" is usually included in core-web-vitals, so it might be redundant.
+  ...compat.extends("next/core-web-vitals"),
   {
     ignores: [
       "node_modules/**",
@@ -18,12 +18,13 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
-      // PERBAIKAN: Tambahkan file yang ingin diabaikan di sini
+      // Mengabaikan file-file ini dari proses linting
       "src/components/ui/Lanyard.tsx",
-      "src/components/ui/ProfileCard.tsx"
+      "src/components/ui/ProfileCard.tsx",
+      "src/declarations.d.ts" // PERBAIKAN: Tambahkan file ini ke daftar abaikan
     ],
   },
 ];
 
 export default eslintConfig;
-    
+

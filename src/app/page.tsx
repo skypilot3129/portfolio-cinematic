@@ -1,103 +1,118 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import BubbleMenu from '@/components/ui/BubbleMenu';
+import { SocialLinks } from '@/components/layout/SocialLinks';
+import { EmailLink } from '@/components/layout/EmailLink';
+import { Hero } from '@/components/sections/Hero';
+import { About } from '@/components/sections/About';
+import { Philosophy } from '@/components/sections/Philosophy';
+import { Projects } from '@/components/sections/Projects';
+import { Contact } from '@/components/sections/Contact';
+import { Footer } from '@/components/layout/Footer';
+import ScrollVelocity from '@/components/ui/ScrollVelocity';
+import { useSmoothScroll } from '@/hooks/useSmoothScroll';
+import Preloader from '@/components/ui/Preloader';
+import { LanguageProvider, useLanguage } from '@/context/LanguageContext';
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+// Komponen untuk tombol pengganti bahasa
+const LanguageSwitcher = () => {
+    const { language, setLanguage } = useLanguage();
+    const toggleLanguage = () => {
+        setLanguage(language === 'id' ? 'en' : 'id');
+    };
+
+    return (
+        <button 
+            onClick={toggleLanguage}
+            className="font-mono text-xs border border-slate/50 rounded-full w-8 h-8 flex items-center justify-center text-slate hover:text-accent hover:border-accent transition-colors pointer-events-auto"
+            aria-label="Toggle Language"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+            {language.toUpperCase()}
+        </button>
+    );
 }
+
+// Konten utama halaman
+const HomeContent = () => {
+    useSmoothScroll(); 
+    
+    const { t } = useLanguage(); // Gunakan hook untuk mendapatkan fungsi terjemahan
+    const [isMounted, setIsMounted] = useState(false);
+    const [isNavOpen, setIsNavOpen] = useState(false);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setIsMounted(true), 100);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    // Gunakan fungsi 't' untuk mendapatkan teks navigasi
+    const navItems = [
+      { label: t('navAbout'), href: '#about', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navPhilosophy'), href: '#philosophy', rotation: 8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navProjects'), href: '#projects', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navContact'), href: '#contact', rotation: 8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } },
+      { label: t('navResume'), href: '/resume.pdf', rotation: -8, hoverStyles: { bgColor: '#64ffda', textColor: '#0a192f' } }
+    ];
+
+    return (
+        <>
+            <div className="relative z-50">
+                <BubbleMenu
+                    logo={<span className="font-bold text-lg text-accent">MAS EUGENE</span>}
+                    items={navItems}
+                    menuBg="#112240"
+                    menuContentColor="#ccd6f6"
+                    useFixedPosition={true}
+                    onMenuClick={setIsNavOpen}
+                    languageSwitcher={<LanguageSwitcher />}
+                />
+            </div>
+
+            <div className={`relative z-10 transition-all duration-500 ${isNavOpen ? 'filter blur-md pointer-events-none' : ''}`}>
+                <SocialLinks isMounted={isMounted} />
+                <EmailLink isMounted={isMounted} />
+                <main>
+                    <Hero isMounted={isMounted} />
+                    <div className="relative z-20 bg-navy">
+                        <ScrollVelocity texts={["Eugene AI Web Dev", "Intelligent Web Solutions"]} velocity={-100} className="font-syne text-slate-lightest" />
+                    </div>
+                    <div className="container mx-auto px-8 sm:px-16 md:px-24">
+                        <About />
+                        <Philosophy />
+                        <Projects />
+                        <Contact />
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        </>
+    );
+};
+
+// Komponen utama yang membungkus seluruh halaman
+const Home = () => {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <LanguageProvider>
+            <div className="bg-navy min-h-screen">
+                <AnimatePresence>
+                    {isLoading && <Preloader />}
+                </AnimatePresence>
+                {!isLoading && <HomeContent />}
+            </div>
+        </LanguageProvider>
+    );
+};
+
+export default Home;
+

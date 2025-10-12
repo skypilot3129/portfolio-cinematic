@@ -1,17 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic'; // PERBAIKAN: Impor 'dynamic' dari Next.js
 import { motion, AnimatePresence } from 'framer-motion';
 import ShinyText from "@/components/ui/ShinyText";
-import Lanyard from "@/components/ui/Lanyard";
 import { IconGitHub, IconInstagram, IconLinkedin } from "@/components/ui/Icons";
 import { useLanguage } from "@/context/LanguageContext";
+
+// PERBAIKAN: Muat Lanyard secara dinamis hanya di sisi klien (browser)
+const Lanyard = dynamic(() => import('@/components/ui/Lanyard'), {
+    ssr: false, // Nonaktifkan Server-Side Rendering untuk komponen ini
+    loading: () => <div className="h-96 w-full max-w-sm" /> // Tampilkan placeholder saat Lanyard dimuat
+});
 
 const ContactOverlay = ({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }) => {
     const { t } = useLanguage();
     const [isReadyForCanvas, setIsReadyForCanvas] = useState(false);
 
     useEffect(() => {
+        // Tunda render Lanyard sedikit untuk memastikan animasi overlay mulus
         const timer = setTimeout(() => setIsReadyForCanvas(true), 500);
         return () => clearTimeout(timer);
     }, []);
@@ -44,13 +51,13 @@ const ContactOverlay = ({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
                 className="flex flex-col items-center text-center"
             >
                 <div className="relative h-96 w-full max-w-sm mx-auto">
+                    {/* Lanyard hanya akan dirender di browser setelah jeda singkat */}
                     {isReadyForCanvas && <Lanyard position={[0, -2, 10]} />}
                 </div>
                 
-                {/* PERBAIKAN: Menambahkan 'as string' */}
                 <h3 className="font-syne text-3xl text-slate-lightest mt-4">{t('overlayTitle') as string}</h3>
-                <a href="mailto:emailanda@contoh.com" className="font-mono text-accent mt-2 hover:underline">
-                    emailanda@contoh.com
+                <a href="mailto:skypilot048@gmail.com" className="font-mono text-accent mt-2 hover:underline">
+                    skypilot048@gmail.com
                 </a>
 
                 <div className="flex items-center gap-6 text-slate mt-8">
@@ -76,10 +83,8 @@ export const Contact = () => {
             >
                 <h2 className="flex items-center justify-center text-3xl font-semibold font-syne text-slate-lightest mb-4">
                     <span className="text-accent font-mono text-2xl mr-3">04.</span>
-                    {/* PERBAIKAN: Menambahkan 'as string' */}
                     <ShinyText text={t('contactTitle') as string} speed={5} />
                 </h2>
-                {/* PERBAIKAN: Menambahkan 'as string' */}
                 <p className="text-slate max-w-xl mx-auto mb-8">{t('contactTagline') as string}</p>
                 
                 <motion.button 
@@ -92,7 +97,6 @@ export const Contact = () => {
                     }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    {/* PERBAIKAN: Menambahkan 'as string' */}
                     <span className="relative z-10">{t('contactButton') as string}</span>
                     <span className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 </motion.button>

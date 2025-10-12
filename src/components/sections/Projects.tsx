@@ -49,6 +49,7 @@ export const Projects = () => {
                 <p className="text-slate mt-4 max-w-2xl mx-auto">{t('projectsTagline') as string}</p>
             </div>
 
+            {/* PERBAIKAN: Tinggi container disesuaikan untuk mobile */}
             <div className="relative w-full h-[550px] md:h-[500px]" style={{ perspective: '1000px' }}>
                 <AnimatePresence initial={false}>
                     {projectsData.map((project, index) => {
@@ -81,6 +82,7 @@ export const Projects = () => {
                                 className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-[420px] h-auto aspect-[9/12] md:w-[550px] md:h-[450px] md:aspect-auto"
                             >
                                 <div className="w-full h-full bg-light-navy/50 backdrop-blur-sm rounded-2xl border border-slate/20 shadow-2xl p-4 md:p-6 flex flex-col group/card">
+                                    {/* PERBAIKAN: Tinggi gambar disesuaikan dengan persentase */}
                                     <div className="relative overflow-hidden rounded-lg w-full h-[45%] md:h-48">
                                         <Image 
                                             src={project.image} 
@@ -110,7 +112,7 @@ export const Projects = () => {
             </div>
             
             {/* PERBAIKAN: Margin atas dikurangi agar tombol lebih dekat ke kartu */}
-            <div className="mt-8 md:mt-8 flex gap-8">
+            <div className="mt-4 md:mt-8 flex gap-8">
                 <button onClick={handlePrev} className="p-3 rounded-full bg-light-navy border border-slate/20 text-slate hover:text-accent hover:border-accent transition-colors">
                     <IconChevronDown className="w-6 h-6 rotate-90" />
                 </button>

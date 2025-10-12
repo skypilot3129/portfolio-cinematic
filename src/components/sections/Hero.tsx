@@ -104,7 +104,7 @@ export const Hero = ({ isMounted }: { isMounted: boolean }) => {
                             avatarUrl="/eugene.jpg"
                             name="Mas Eugene"
                             title="AI Website Developer"
-                            handle="@maseugene"
+                            handle="maseugene"
                             status="Build Future"
                             contactText="Hubungi Saya"
                             enableTilt={true}
